@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Replica</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <style>
+
+#navbar{
+    transition: transform 0.5s ease;
+}
+.nav-link.active {
+    color: rgb(250 204 21);
+}
+
+.dropdown-submenu:hover .dropdown-menu {
+    display: block;
+  }
+
+.expanding-container {
+    /* Initial state */
+    transform: scale(0);
+    opacity: 0;
+    transition: all 1.2s ease-out; 
+}
+
+.expanding-container.active{
+    transform: scale(1);
+    opacity: 1;
+    transition: all 1.2s ease-out; 
+}
+
+.left-part{
+  /* Initial state */
+    transform: translateX(60px) translateY(60px);
+    opacity: 0;
+    transition: all 1.2s ease-out;
+}
+
+.left-part.active, .right-part.active{
+    transform: translateX(0px) translateY(0px);
+    opacity: 1;
+}
+
+.right-part{
+    transform: translateX(-60px) translateY(60px);
+    opacity: 0;
+    transition: all 1.2s ease-out;
+}
+
+.up-part{
+    /* Initial state */
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 1.2s ease-out;
+}
+
+.up-part.active{
+    transform: translateY(0px);
+    opacity: 1;
+}
+
+.cimg {
+  /* Apply grayscale filter by default */
+  filter: grayscale(100%);
+  transition: filter 100ms;
+}
+
+.cimg:hover {
+  /* Remove grayscale filter on hover */
+  filter: grayscale(0);
+}
+
+.carousel {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.carousel-slide {
+    flex: 0 0 auto;
+    width: 100%; 
+    transition: transform 0.5s ease; /* Sliding effect */
+}
+
+.testimonial{
+    display: flex;
+    overflow: hidden;
+    
+}
+
+.testimonial-slide{
+    flex: 0 0 auto;
+    width: 100%;
+    transition: transform 0.7s ease;
+}
+
+        .btn-active {
+            background-color: rgb(250 204 21);
+            color: black;
+        }
+
+         .card:hover .card-img {
+            transform: scale(1.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .card {
+            transition: width 0.5s ease-in-out, margin 0.5s ease-in-out; /* Add transitions */
+        }
+
+        .card-show {
+            width: 24rem;
+            margin: 1rem;
+        }
+
+        .card-hide {
+            width: 0rem; 
+            margin: -1rem; /* Negative margin to remove space */
+        }
+
+        .icon-container {
+            transform: translateY(-100%);
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+
+        .group:hover .icon-container {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+
+        
+    </style>
+</head>
+<body>
+    <!-- Header -->
+
+        <header class="text-white">
+            <nav id="navbar" class="fixed top-0 left-0 w-full bg-black bg-opacity-0 transition duration-500 ease-in-out mx-auto px-6 py-3 flex justify-around items-center z-30">
+                <a href="#" class="font-semibold text-4xl ">GP<span class="text-yellow-300">.</span></a>
+
+                         <button id="menu-btn" class="md:hidden border border-yellow-300 p-2 rounded text-yellow-300">
+                            ☰
+                        </button>
+                    
+                        <!-- Full Page Overlay Menu Container (Hidden by Default) -->
+                        <div id="overlay-menu" class="fixed inset-0 bg-black bg-opacity-90 hidden z-40 flex flex-col items-center justify-center">
+                            <button id="close-btn" class="absolute top-5 right-5 p-2 text-yellow-300">
+                                X
+                            </button>
+                            
+                            <ul class="space-y-6">
+                                <li><a href="#home" class="text-white text-2xl hover:text-yellow-300">Home</a></li>
+                                <li><a href="#about" class="nav-link text-2xl font-semibold hover:text-yellow-300">About</a></li>
+                                <li><a href="#services" class="nav-link text-2xl font-semibold hover:text-yellow-300">Services</a></li>
+                                <li><a href="#portfolio" class="nav-link text-2xl font-semibold hover:text-yellow-300">Portfolio</a></li>
+                                <li><a href="#team" class="nav-link text-2xl font-semibold hover:text-yellow-300">Team</a></li>
+                                <li><a href="#contact" class="nav-link text-2xl font-semibold hover:text-yellow-300">Contact</a></li>
+                            </ul>
+                        </div>
+
+                <ul class="hidden md:flex space-x-6" id="menu">
+                    <li><a href="#home" class="active nav-link font-semibold hover:text-yellow-300">Home</a></li>
+                    <li><a href="#about" class="nav-link font-semibold hover:text-yellow-300">About</a></li>
+                    <li><a href="#services" class="nav-link font-semibold hover:text-yellow-300">Services</a></li>
+                    <li><a href="#portfolio" class="nav-link font-semibold hover:text-yellow-300">Portfolio</a></li>
+                    <li><a href="#team" class="nav-link font-semibold hover:text-yellow-300">Team</a></li>
+                    <li class="relative">
+                        <a href="#" class="nav-link font-semibold text-white hover:text-yellow-300 focus:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium" id="navbarDropdown" role="button">
+                            Drop Down <span class="font-light">v</span>
+                        </a>
+                        <ul class="dropdown-menu absolute hidden bg-white text-black min-w-full shadow-lg mt-1 z-30 w-36">
+                            <li><a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-400">Drop Down 1</a></li>
+                            <li><a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-400">Drop Down 2</a></li>
+                            <li class="relative dropdown-submenu">
+                                <a href="#" class="dropdown-item dropdown-toggle block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-400">Deep Drop >></a>
+                                <ul class="dropdown-menu absolute hidden bg-white text-black min-w-full shadow-2xl mt-1 z-50 left-full top-0">
+                                    <li><a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-400">Deep Drop 1</a></li>
+                                    <li><a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-400">Deep Drop 2</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#" class="dropdown-item block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-400">Drop Down 3</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#contact" class="nav-link font-semibold hover:text-yellow-300">Contact</a></li>
+                </ul>
+                <button class="border border-yellow-300 py-2 px-4 rounded hover:bg-yellow-300 hover:text-black hover:transition duration-150 ease-in-out">Get Started</button>
+            </nav>
+        </header>
+
+    <!-- Main Content -->
+    <main>
+<section id="home">
+        <div class="relative bg-cover bg-no-repeat flex items-center justify-center z-0 min-h-screen" style="background-image: url('./assets/img/hero-bg.jpg');">
+            <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-10"></div>
+
+        <div class="expanding-container mx-auto px-4 py-12 z-20 text-center">
+            <div class="text-white my-12 lg:my-0">
+                <div class="font-bold text-6xl mb-2">Powerful Digital<br> Solutions With Gp<span class="text-yellow-300">.</span></div>
+                <div class="font-thin text-2xl mb-8">We are team of talented digital marketers</div>
+            </div>
+                <div class="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-0">
+                    <!-- Box 1 -->
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 p-4">
+                        <div class="border p-7 flex-grow hover:border-yellow-300 transition duration-300 h-32 flex flex-col justify-between">
+                                <div class="material-icons text-yellow-300">home</div> 
+                            <div>
+                                <a href="#" class="text-xl text-white font-semibold hover:text-yellow-300">Lorem Ipsum</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 p-4">
+                        <div class="border p-7 flex-grow hover:border-yellow-300 transition duration-300 h-32 flex flex-col justify-between">
+                            <div class="material-icons text-yellow-300">dataset</div>
+                            <div>
+                                <a href="#" class="text-xl text-white font-semibold hover:text-yellow-300">Dolor Sitema</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 p-4">
+                        <div class="border p-7 flex-grow hover:border-yellow-300 transition duration-300 h-32 flex flex-col justify-between">
+                            <div class="material-icons text-yellow-300">compost</div>
+                            <div>
+                                <a href="#" class="text-xl text-white font-semibold hover:text-yellow-300">Sedare Perspiciatis</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 p-4">
+                        <div class="border p-7 flex-grow hover:border-yellow-300 transition duration-300 h-32 flex flex-col justify-between">
+                            <div class="material-icons text-yellow-300">terminal</div>
+                            <div>
+                                <a href="#" class="text-xl text-white font-semibold hover:text-yellow-300">Magni Dolores</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5 p-4">
+                        <div class="border p-7 flex-grow hover:border-yellow-300 transition duration-300 h-32 flex flex-col justify-between">
+                            <div class="material-icons text-yellow-300">money</div>
+                            <div>
+                            <a href="#" class="text-xl text-white font-semibold hover:text-yellow-300">Nemos Enimade</a>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+</section>
+    <!-- ----------------------/Home------------------------ -->
+
+    <!-- -------------------------About-------------------------- -->
+<section id="about">
+    <div class=" mx-auto p-6 flex flex-col-reverse lg:flex-row items-center p-4 m-4">
+        <div class="right-part w-full lg:mr-4 lg:w-1/2 p-4">
+        <div class="text-gray-700 text-3xl font-bold">Voluptatem dignissimos provident quasi corporis voluptates sit assumenda.</div>
+        <div class="text-gray-800 text-base italic mt-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+        <div class="text-gray-800 mt-4">
+            <div class="flex">
+                <div class="material-icons text-yellow-300 mt-2" style="font-size: 1.25rem;">done_all</div>
+                <div class="ml-2 mt-2"> Ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+            </div>
+            <div class="flex">
+                <div class="material-icons text-yellow-300 mt-2" style="font-size: 1.25rem;">done_all</div>
+                <div class="ml-2 mt-2 ">Duis aute irure dolor in reprehenderit in voluptate velit.</div>
+            </div>
+            <div class="flex">
+                <div class="material-icons text-yellow-300 mt-2" style="font-size: 1.25rem;">done_all</div>
+                <div class="ml-2 mt-2">Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.</div>
+            </div>
+        
+        <div class="text-gray-800 text-base mt-4 ">
+        Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident
+        </div>
+    </div>
+    </div>
+        <div class="left-part my-12 w-full lg:w-1/2 aspect-w-1 aspect-h-1 mb-12">
+        <img src="./assets/img/about.jpg">
+       </div>
+    </div>
+</section>
+    <!-- -----------------------Carousel---------------------------- -->
+    <!-- Carousel -->
+    
+    <div id="carousel" class="carousel expanding-container relative w-full overflow-hidden ">
+        <!-- Slides -->
+        <div class="carousel-slide first flex lg:p-8 slide">
+            <div class="w-1/6 h-auto lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-1.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-2.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-3.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-4.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-5.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-6.png" class="cimg">
+            </div>
+        </div>
+        <div class="carousel-slide flex slide mx-2 lg:mx-4 lg:p-10">
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-2.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-3.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-4.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-5.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-6.png" class="cimg"> 
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-7.png" class="cimg">
+            </div>
+        </div>
+        <div class="carousel-slide flex slide lg:p-8">
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-3.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-4.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-5.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-6.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-7.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-8.png" class="cimg">
+            </div>
+        </div>
+        <div class="carousel-slide flex slide lg:p-8">
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-4.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-5.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-6.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-7.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-8.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-1.png" class="cimg">
+            </div>
+        </div>
+        <div class="carousel-slide flex slide lg:p-8">
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-5.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-6.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-7.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-8.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-1.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-2.png" class="cimg">
+            </div>
+        </div>
+        <div class="carousel-slide flex slide lg:p-8">
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-6.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-7.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-8.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-1.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-2.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-3.png" class="cimg">
+            </div>
+        </div>
+        <div class="carousel-slide flex slide lg:p-8">
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-7.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-8.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-1.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-2.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-3.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-4.png" class="cimg">
+            </div>
+        </div>
+        <div class="carousel-slide flex slide p-8">
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-8.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-1.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-2.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-3.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-4.png" class="cimg">
+            </div>
+            <div class="w-1/6 h-auto mx-2 lg:mx-4 lg:p-10">
+                <img src="./assets/img/clients/client-5.png" class="cimg">
+            </div>
+        </div>  
+        
+    </div>
+    <div class="carousel-dots flex justify-center p-4">
+        <!-- Generate dots based on the number of slides -->
+        <span class="dot h-2.5 w-2.5 mx-1 bg-gray-400 rounded-full cursor-pointer hover:bg-yellow-400" data-slide-to="0"></span>
+        <span class="dot h-2.5 w-2.5 mx-1 bg-gray-400 rounded-full cursor-pointer hover:bg-yellow-400" data-slide-to="1"></span>
+        <span class="dot h-2.5 w-2.5 mx-1 bg-gray-400 rounded-full cursor-pointer hover:bg-yellow-400" data-slide-to="2"></span>
+        <span class="dot h-2.5 w-2.5 mx-1 bg-gray-400 rounded-full cursor-pointer hover:bg-yellow-400" data-slide-to="3"></span>
+        <span class="dot h-2.5 w-2.5 mx-1 bg-gray-400 rounded-full cursor-pointer hover:bg-yellow-400" data-slide-to="4"></span>
+        <span class="dot h-2.5 w-2.5 mx-1 bg-gray-400 rounded-full cursor-pointer hover:bg-yellow-400" data-slide-to="5"></span>
+        <span class="dot h-2.5 w-2.5 mx-1 bg-gray-400 rounded-full cursor-pointer hover:bg-yellow-400" data-slide-to="6"></span>
+        <span class="dot h-2.5 w-2.5 mx-1 bg-gray-400 rounded-full cursor-pointer hover:bg-yellow-400" data-slide-to="7"></span>
+    </div>
+    
+
+<!-- ----------------------!Carousel------------------------- -->
+
+<div class="mx-auto p-6 lg:flex lg:items-center lg:p-8">
+    <div class="lg:w-1/2 aspect-w-1 aspect-h-1 left-part">
+        <img src="./assets/img/features.jpg">
+       </div>
+    <div class=" mt-6 lg:mt-0 lg:ml-10 lg:w-1/2">
+    
+    <div class="text-gray-800 mt-0 w-full lg:w-auto ml-4 right-part">
+        <div class="flex ">
+            <div class="material-icons text-yellow-300 mt-2" style="font-size: 3rem;">description</div>
+            <div>
+            <div class="ml-4 mt-2 text-xl font-semibold text-gray-700">Est labore ad</div>
+            <div class="ml-4 mt-2 text-gray-500"> Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut aliquip</div>
+            </div>
+        </div>
+        <div class="flex mt-10">
+            <div class="material-icons text-yellow-300 mt-2" style="font-size: 3rem;">inventory</div>
+            <div>
+            <div class="ml-4 mt-2 text-xl font-semibold text-gray-700">Harum esse qui</div>
+            <div class="ml-4 mt-2 text-gray-500">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt</div>
+            </div>
+        </div>
+        <div class="flex mt-10">
+            <div class="material-icons text-yellow-300 mt-2" style="font-size: 3rem;">image</div>
+            <div>
+            <div class="ml-4 mt-2 text-xl font-semibold text-gray-700">Aut occaecati</div>
+            <div class="ml-4 mt-2 text-gray-500">Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere</div>
+            </div>
+        </div>
+        <div class="flex mt-10">
+            <div class="material-icons text-yellow-300 mt-2" style="font-size: 3rem;">security</div>
+            <div>  
+            <div class="ml-4 mt-2 text-xl font-semibold text-gray-700">Beatae veritatis</div>
+            <div class="ml-4 mt-2 text-gray-500">Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta</div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- ------------------------------------------Services-------------------------------------- -->
+
+<div class="ml-4 mt-2 text-gray-500 font-semibold lg:ml-28 mt-28">SERVICES<span class="text-yellow-300 ml-2">----------------</span></div>
+<div class="ml-4 mt-2 text-black text-4xl font-bold lg:ml-28 mt-1">CHECK OUR SERVICES</div>
+<section id="services">
+<div class="container px-24 py-12 mx-auto">
+
+        <div class="box-row-1 flex flex-wrap justify-center expanding-container">
+        <!-- Box 1 -->
+        <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+            <div class="border p-7 py-20 hover:shadow-2xl transition duration-500 flex flex-col justify-center items-center">
+                <div class="bg-yellow-400 rounded p-4 mb-4">
+                    <div class="material-icons text-black ">home</div>
+                </div>  
+                <div>
+                    <a href="#" class="text-xl text-black font-semibold hover:text-yellow-300">Lorem Ipsum</a>
+                </div>
+                <div class="ml-4 mt-2 text-gray-700 text-center">Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta
+                </div>
+            </div>
+        </div>
+        <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+            <div class="border p-7 py-20 hover:shadow-2xl transition duration-500 flex flex-col justify-center items-center">
+                <div class="bg-yellow-400 rounded p-4 mb-4">
+                    <div class="material-icons text-black ">home</div>
+                </div>  
+                <div>
+                    <a href="#" class="text-xl text-black font-semibold hover:text-yellow-300">Sed ut perspiciatis</a>
+                </div>
+                <div class="ml-4 mt-2 text-gray-700 text-center">Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta
+                </div>
+            </div>
+        </div>
+        <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+            <div class="border p-7 py-20 hover:shadow-2xl transition duration-500 flex flex-col justify-center items-center">
+                <div class="bg-yellow-400 rounded p-4 mb-4">
+                    <div class="material-icons text-black ">home</div>
+                </div>  
+                <div>
+                    <a href="#" class="text-xl text-black font-semibold hover:text-yellow-300">Magni Dolores</a>
+                </div>
+                <div class="ml-4 mt-2 text-gray-700 text-center">Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="flex flex-wrap justify-center mt-8 md:mt-0 expanding-container">
+            <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+                <div class="border p-7 py-20 hover:shadow-2xl transition duration-500 flex flex-col justify-center items-center">
+                    <div class="bg-yellow-400 rounded p-4 mb-4">
+                        <div class="material-icons text-black ">home</div>
+                    </div>  
+                    <div>
+                        <a href="#" class="text-xl text-black font-semibold hover:text-yellow-300">Nemo Enim</a>
+                    </div>
+                    <div class="ml-4 mt-2 text-gray-700 text-center">Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta
+                    </div>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+                <div class="border p-7 py-20 hover:shadow-2xl transition duration-500 flex flex-col justify-center items-center">
+                    <div class="bg-yellow-400 rounded p-4 mb-4">
+                        <div class="material-icons text-black ">home</div>
+                    </div>  
+                    <div>
+                        <a href="#" class="text-xl text-black font-semibold hover:text-yellow-300">Dele cardo</a>
+                    </div>
+                    <div class="ml-4 mt-2 text-gray-700 text-center">Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta
+                    </div>
+                </div>
+            </div>
+        
+        <div class="w-full md:w-1/2 lg:w-1/3 p-4">
+            <div class="border p-7 py-20 hover:shadow-2xl transition duration-500 flex flex-col justify-center items-center">
+                <div class="bg-yellow-400 rounded p-4 mb-4">
+                    <div class="material-icons text-black ">home</div>
+                </div>  
+                <div>
+                    <a href="#" class="text-xl text-black font-semibold hover:text-yellow-300">Divera don</a>
+                </div>
+                <div class="ml-4 mt-2 text-gray-700 text-center">Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta
+                </div>
+            </div>
+        </div>
+      </div>
+</div>
+</section>
+
+<div class="relative bg-fixed bg-cover bg-no-repeat h-60 flex items-center justify-center" style="background-image: url('./assets/img/cta-bg.jpg');">
+    <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50"></div> <!-- Overlay -->
+    <div class="text-center text-white z-20 expanding-container">
+        <div class="font-bold text-2xl mb-2">Call To Action</div>
+        <div class="px-6 lg:px-36 text-lg">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div class="mt-8">
+            <button class="border border-white text-white py-2 px-4 rounded hover:bg-yellow-400 hover:text-black hover:border-yellow-400 transition duration-500 ease-in-out">Call To Action</button>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- ------------------------------------------Portfolio-------------------------------------- -->
+
+<div class="ml-4 mt-2 text-gray-500 font-semibold ml-28 mt-28 up-part">PORTFOLIO<span class="text-yellow-300 ml-2">----------------</span></div>
+<div class="text-black text-4xl font-bold ml-28 mt-1 up-part">CHECK OUR PORTFOLIO</div>
+
+<section id="portfolio" class="bg-white py-12">
+<div class="up-part gallery mx-auto px-4">
+    <div class="buttons px-2 py-6 flex flex wrap justify-center content-center">
+        <button type="button" class="m-2 text-gray-700 font-semibold px-3 py-1 rounded hover:bg-yellow-300 hover:text-black transition duration-400 ease-in-out">ALL</button>
+        <button type="button" data-btn="1" class="m-2 text-gray-700 font-semibold px-3 py-1 rounded hover:bg-yellow-300 hover:text-black transition duration-400 ease-in-out">APP</button>
+        <button type="button" data-btn="2" class="m-2 text-gray-700 font-semibold px-3 py-1 rounded hover:bg-yellow-300 hover:text-black transition duration-400 ease-in-out">CARD</button>
+        <button type="button" data-btn="3" class="m-2 text-gray-700 font-semibold px-3 py-1 rounded hover:bg-yellow-300 hover:text-black transition duration-400 ease-in-out">WEB</button>
+    </div>
+    <div class="images flex justify-start flex-wrap items-center gap-8 justify-center my-auto ">
+        <div class="card group w-96 m-4 p-0 relative overflow-hidden">
+            <img src="./assets/img/portfolio/portfolio-1.jpg" data-img="1" class="w-full h-full card-img">
+            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50"></div>
+            <div class="memo absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100">
+                <div class="text-lg ml-2">APP 1</div>
+                <div class="italic text-lg ml-2 text-gray-300">APP</div>
+                <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large;">add</span> <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large; ">link</span>
+            </div>
+        </div>
+        <div class="card group w-96 m-4 p-0 relative overflow-hidden">
+            <img src="./assets/img/portfolio/portfolio-2.jpg" data-img="3" class="w-full h-full card-img">
+            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50"></div>
+            <div class="memo absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100">
+                <div class="text-lg ml-2">WEB 1</div>
+                <div class="italic text-lg ml-2 text-gray-300">WEB</div>
+                <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large;">add</span> <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large; ">link</span>
+            </div>
+        </div>
+        <div class="card group w-96 m-4 p-0 relative overflow-hidden">
+            <img src="./assets/img/portfolio/portfolio-3.jpg" data-img="1" class="w-full h-full card-img">
+            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50"></div>
+            <div class="memo absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100">
+                <div class="text-lg ml-2">APP 2</div>
+                <div class="italic text-lg ml-2 text-gray-300">APP</div>
+                <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large;">add</span> <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large; ">link</span>
+            </div>
+        </div>
+        <div class="card group w-96 m-4 p-0 relative overflow-hidden">
+            <img src="./assets/img/portfolio/portfolio-4.jpg" data-img="2" class="w-full h-full card-img">
+            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50"></div>
+            <div class="memo absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100">
+                <div class="text-lg ml-2">CARD 1</div>
+                <div class="italic text-lg ml-2 text-gray-300">CARD</div>
+                <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large;">add</span> <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large; ">link</span>
+            </div>
+        </div>
+        <div class="card group w-96 m-4 p-0 relative overflow-hidden">
+            <img src="./assets/img/portfolio/portfolio-5.jpg" data-img="3" class="w-full h-full card-img">
+            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50"></div>
+            <div class="memo absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100">
+                <div class="text-lg ml-2">WEB 2</div>
+                <div class="italic text-lg ml-2 text-gray-300">WEB</div>
+                <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large;">add</span> <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large; ">link</span>
+            </div>
+        </div>
+        <div class="card group w-96 m-4 p-0 relative overflow-hidden">
+            <img src="./assets/img/portfolio/portfolio-6.jpg" data-img="1" class="w-full h-full card-img">
+            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50"></div>
+            <div class="memo absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100">
+                <div class="text-lg ml-2">APP 3</div>
+                <div class="italic text-lg ml-2 text-gray-300">APP</div>
+                <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large;">add</span> <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large; ">link</span>
+            </div>
+        </div>
+        <div class="card group w-96 m-4 p-0 relative overflow-hidden">
+            <img src="./assets/img/portfolio/portfolio-7.jpg" data-img="2" class="w-full h-full card-img">
+            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50"></div>
+            <div class="memo absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100">
+                <div class="text-lg ml-2">CARD 2</div>
+                <div class="italic text-lg ml-2 text-gray-300">CARD</div>
+                <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large;">add</span> <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large; ">link</span>
+            </div>
+        </div>
+        <div class="card group w-96 m-4 p-0 relative overflow-hidden">
+            <img src="./assets/img/portfolio/portfolio-8.jpg" data-img="2" class="w-full h-full card-img">
+            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50"></div>
+            <div class="memo absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100">
+                <div class="text-lg ml-2">CARD 3</div>
+                <div class="italic text-lg ml-2 text-gray-300">CARD</div>
+                <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large;">add</span> <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large; ">link</span>
+            </div>
+        </div>
+        <div class="card group w-96 m-4 p-0 relative overflow-hidden">
+            <img src="./assets/img/portfolio/portfolio-9.jpg" data-img="3" class="w-full h-full card-img">
+            <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50"></div>
+            <div class="memo absolute bottom-3 left-3 text-white opacity-0 group-hover:opacity-100">
+                <div class="text-lg ml-2">WEB 3</div>
+                <div class="italic text-lg ml-2 text-gray-300">WEB</div>
+                <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large;">add</span> <span class="material-icons hover:text-yellow-400 cursor-pointer" style="font-size:x-large; ">link</span>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- -----------------------------------------/filterapp--------------------------------- -->
+
+<section id="statistics">
+    <div class="container mx-auto p-6">
+<div class="flex flex-col lg:flex-row items-center lg:items-start my-12">
+    <div class="w-full lg:w-2/5">
+        <img src="./assets/img/counts-img.jpg" style="height: 450px;" class="w-full object-cover left-part">
+       </div>
+
+    <div class="w-full lg:w-3/5 mt-6 lg:mt-0 lg:ml-10">
+        <div>
+            <div>
+            <div class="text-3xl font-bold text-gray-800 mt-4 lg:mt-0">Voluptatem dignissimos provident quasi</div>
+            <div class="ml-4 mt-2 text-black"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit</div>
+            </div>
+        </div>
+    <div class="text-black mt-8">
+        <div class="flex">
+        <div class="flex-column">
+            <div class="flex ">
+                <div class="material-icons text-yellow-300 mt-2 " style="font-size: 3rem;">mood</div>
+                <div>
+                <div class="animatedNumber ml-4 mt-2 text-3xl font-bold" data-target="65">0</div>
+                <div class="ml-4 mt-2 text-gray-600"> <span class="font-bold text-black"> Happy </span>consequuntur voluptas nostrum aliquid ipsam architecto ut.</div>
+                </div>
+            </div>
+            <div class="flex mt-7">
+                <div class="material-icons text-yellow-300 mt-2" style="font-size: 3rem;">update</div>
+                <div>
+                <div class="animatedNumber ml-4 mt-2 text-3xl font-bold" data-target="35">0</div>
+                <div class="ml-4 mt-2 text-gray-600"><span class="font-bold text-black"> Years of Experience </span> aut commodi quaerat modi aliquam nam ducimus aut voluptate non vel</div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-column">
+          <div class="flex">
+            <div class="material-icons text-yellow-300 mt-2" style="font-size: 3rem;">route</div>
+            <div>
+            <div class="animatedNumber ml-4 mt-2 text-3xl font-bold" data-target="85">0</div>
+            <div class="ml-4 mt-2 text-gray-600"><span class="font-bold text-black"> Projects </span> adipisci atque cum quia aspernatur totam laudantium et quia dere tan</div>
+            </div>
+        </div>
+        <div class="flex mt-1">
+            <div class="material-icons text-yellow-300 mt-2" style="font-size: 3rem;">hotel_class</div>
+            <div>  
+            <div class="animatedNumber ml-4 mt-2 text-3xl font-bold" data-target="20">0</div>
+            <div class="ml-4 mt-2 text-gray-600"><span class="font-bold text-black"> Awards </span> rerum asperiores dolor alias quo reprehenderit eum et nemo pad der</div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+</section>
+
+<div class="bg-fixed bg-cover bg-no-repeat h-96 z-0 mb-8 flex items-center justify-center relative" style="background-image: url('./assets/img/testimonials-bg.jpg');">
+    <div class="bg-black absolute inset-0 opacity-50 z-20"></div>
+    <div class="testimonial z-30 expanding-container">
+    <div class="w-full testimonial-slide flex flex-col items-center">
+        <div class="rounded-full h-24 w-24 overflow-hidden">
+            <img src="./assets/img/testimonials/testimonials-1.jpg" alt="Saul Goodman">
+        </div>
+        <div class="slide text-white text-2xl font-bold mt-4">Saul Goodman</div>
+        <div class="text-gray-300">Ceo & Founder</div>
+        <div class="text-gray-300 text-lg mt-2">
+            <span>
+                <span class="material-icons text-yellow-300" style="transform: scaleX(-1)">format_quote</span>
+            </span>
+            Don't Drink And Drive, But When You Do, Call Saul.
+            <span>
+                <span class="material-icons text-yellow-300">format_quote</span>
+            </span>
+        </div>
+    </div>
+    <div class="w-full testimonial-slide flex flex-col items-center">
+        <div class="rounded-full h-24 w-24 overflow-hidden">
+            <img src="./assets/img/testimonials/testimonials-2.jpg" alt="Sara Willson">
+        </div>
+        <div class="text-white text-2xl font-bold mt-4">Sara Willson</div>
+        <div class="text-gray-300">Designer</div>
+        <div class="text-gray-300 text-lg mt-2">
+            <span>
+                <span class="material-icons text-yellow-300" style="transform: scaleX(-1)">format_quote</span>
+            </span>
+            In the end, it's not the years in your life that count.
+            <span>
+                <span class="material-icons text-yellow-300">format_quote</span>
+            </span>
+        </div>
+    </div>
+    <div class="w-full testimonial-slide flex flex-col items-center">
+        <div class="rounded-full h-24 w-24 overflow-hidden">
+            <img src="./assets/img/testimonials/testimonials-3.jpg" alt="Jena Karlis">
+        </div>
+        <div class="text-white text-2xl font-bold mt-4">Jena Karlis</div>
+        <div class="text-gray-300">Store Owner</div>
+        <div class="text-gray-300 text-lg mt-2">
+            <span>
+                <span class="material-icons text-yellow-300" style="transform: scaleX(-1)">format_quote</span>
+            </span>
+            Never let the fear of striking out keep you from playing the game.
+            <span>
+                <span class="material-icons text-yellow-300">format_quote</span>
+            </span>
+        </div>
+    </div>
+    <div class="w-full testimonial-slide flex flex-col items-center">
+        <div class="rounded-full h-24 w-24 overflow-hidden">
+            <img src="./assets/img/testimonials/testimonials-4.jpg" alt="Matt Brandon">
+        </div>
+        <div class="text-white text-2xl font-bold mt-4">Matt Brandon</div>
+        <div class="text-gray-300">Freelancer</div>
+        <div class="text-gray-300 text-lg mt-2">
+            <span>
+                <span class="material-icons text-yellow-300" style="transform: scaleX(-1)">format_quote</span>
+            </span>
+            Go confidently in the direction of your dreams!
+            <span>
+                <span class="material-icons text-yellow-300">format_quote</span>
+            </span>
+        </div>
+    </div>
+    <div class="w-full testimonial-slide flex flex-col items-center">
+        <div class="rounded-full h-24 w-24 overflow-hidden">
+            <img src="./assets/img/testimonials/testimonials-1.jpg" alt="Saul Goodman">
+        </div>
+        <div class="slide text-white text-2xl font-bold mt-4">Saul Goodman</div>
+        <div class="text-gray-300">Ceo & Founder</div>
+        <div class="text-gray-300 text-lg mt-2">
+            <span>
+                <span class="material-icons text-yellow-300" style="transform: scaleX(-1)">format_quote</span>
+            </span>
+            Don't Drink And Drive, But When You Do, Call Saul.
+            <span>
+                <span class="material-icons text-yellow-300">format_quote</span>
+            </span>
+        </div>
+    </div>
+    
+</div>
+</div>
+
+
+
+
+<!-- ------------------------------------------------Teams Page---------------------------------------------- -->
+
+<div class="ml-4 mt-2 text-gray-500 font-semibold ml-28 mt-28 up-part">TEAM<span class="text-yellow-300 ml-2">----------------</span></div>
+<div class="text-black text-4xl font-bold ml-28 mt-1 up-part">CHECK OUR TEAM</div>
+
+<section id="team">
+<div class="team-conatiner max-w-full mt-12 mx-28 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Card 1 -->
+   <div class="up-part group bg-white rounded overflow-hidden shadow-lg relative">
+  <img class="w-full" src="./assets/img/team/team-1.jpg">
+  <div class="px-6 py-4">
+    <div class="font-bold text-xl mb-2">Walter White</div>
+    <p class="text-gray-500 text-base">Chief Executive Officer</p>
+  </div>
+  <div class="icon-container absolute bottom-36 inset-x-0 pb-2 flex justify-center space-x-2 cursor-pointer opacity-0 group-hover:opacity-100">
+    <!-- Icon in a box -->
+    <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+      <a href="#" class="text-gray-800">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </div>
+    <!-- Repeat for each icon -->
+    <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+      <a href="#" class="text-gray-800">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </div>
+    <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+      <a href="#" class="text-gray-800">
+        <i class="fab fa-instagram"></i>
+      </a>
+    </div>
+    <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+      <a href="#" class="text-gray-800">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<div class="up-part">
+<div class="up-part group bg-white rounded overflow-hidden shadow-lg relative">
+    <img class="w-full" src="./assets/img/team/team-2.jpg">
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">Sarah Jhonson</div>
+      <p class="text-gray-500 text-base">Product Manager</p>
+    </div>
+    <div class="icon-container absolute bottom-36 inset-x-0 pb-2 flex justify-center space-x-2 cursor-pointer opacity-0 group-hover:opacity-100">
+      <!-- Icon in a box -->
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </div>
+      <!-- Repeat for each icon -->
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </div>
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="up-part">
+<div class="up-part">
+  <div class="up-part group bg-white rounded overflow-hidden shadow-lg relative">
+    <img class="w-full" src="./assets/img/team/team-3.jpg">
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">William Anderson</div>
+      <p class="text-gray-500 text-base">CTO</p>
+    </div>
+    <div class="icon-container absolute bottom-36 inset-x-0 flex justify-center space-x-2 cursor-pointer opacity-0 group-hover:opacity-100">
+      <!-- Icon in a box -->
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </div>
+      <!-- Repeat for each icon -->
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </div>
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="up-part">
+<div class="up-part">
+<div class="up-part">
+  <div class="up-part group bg-white rounded overflow-hidden shadow-lg relative">
+    <img class="w-full" src="./assets/img/team/team-4.jpg">
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">Amanda Jepson</div>
+      <p class="text-gray-500 text-base">Accountant</p>
+    </div>
+    <div class="icon-container absolute bottom-36 inset-x-0 pb-2 flex justify-center space-x-2 cursor-pointer opacity-0 group-hover:opacity-100">
+      <!-- Icon in a box -->
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </div>
+      <!-- Repeat for each icon -->
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </div>
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
+      <div class="icon-box p-3 opacity-80 bg-gray-300 rounded hover:bg-yellow-400">
+        <a href="#" class="text-gray-800">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+</section>
+
+
+<!-- ------------------------------------------------Contact Page---------------------------------------------- -->
+
+<div class="ml-4 mt-2 text-gray-500 font-semibold lg:ml-28 mt-28 up-part">CONTACT<span class="text-yellow-300 ml-2">----------------</span></div>
+<div class="ml-4 mt-2 text-black text-4xl font-bold lg:ml-28 mt-1 up-part">CONTACT US</div>
+
+<section id="contact">
+<div class="container mx-auto mt-12 p-4 up-part">
+    <div class="lg:mx-24">
+      <!-- Map Section -->
+      <div class="map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d28663.80557507295!2d85.3999616!3d26.099712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1701332848973!5m2!1sen!2sin"
+          width="600"
+          height="450"
+          frameborder="0"
+          style="border:0;"
+          allowfullscreen=""
+          aria-hidden="false"
+          tabindex="0"
+          class="w-full h-72"
+          ></iframe>
+      </div>
+      
+      <!-- Contact Form Section -->
+<div class="flex mt-16">
+      <div class="flex-column">
+        <div class="mb-8">
+          <div class="flex items-center">
+            <div class="p-4 bg-yellow-400 text-black rounded">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="ml-4">
+              <p class="font-semibold text-xl">Location:</p>
+              <p>A108 Adam Street, New York, NY 535022</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-8">
+          <div class="flex items-center">
+            <div class="p-4 bg-yellow-400 text-black rounded">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="ml-4">
+              <p class="font-semibold text-xl">Email:</p>
+              <p>info@example.com</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <div class="flex items-center">
+            <div class="p-4 bg-yellow-400 text-black rounded">
+              <i class="fas fa-phone"></i>
+            </div>
+            <div class="ml-4">
+              <p class="font-semibold text-xl">Call:</p>
+              <p>+1 5589 55488 55s</p>
+          </div>
+        </div>
+    </div>
+</div>
+
+    <div class="cont-form ml-24">
+        <!-- Contact Form -->
+        <form action="#" method="post">
+          <input type="text" name="name" placeholder="Your Name" class="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-1 focus:ring-yellow-300">
+          <input type="email" name="email" placeholder="Your Email" class="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-1 focus:ring-yellow-300">
+          <input type="text" name="subject" placeholder="Subject" class="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-1 focus:ring-yellow-300">
+          <textarea name="message" rows="4" placeholder="Message" class="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-1 focus:ring-yellow-300"></textarea>
+          <div class="flex justify-center">
+            <button type="submit" class="w-36 bg-yellow-400 text-black rounded p-2 hover:bg-yellow-600 transition-colors">
+              Send Message
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-3 mt-36">
+        <p>© 2023 Website Replica. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
