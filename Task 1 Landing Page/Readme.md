@@ -1,5 +1,5 @@
 
-# Neuro-Nexus-Theta Website
+# G.P Landing Website
 
 Welcome to the GitHub repository for the Neuro-Nexus-Theta website. This site showcases a range of digital marketing solutions and services, presented through a modern and responsive design.
 
